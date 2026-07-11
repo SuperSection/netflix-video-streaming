@@ -102,10 +102,22 @@ public class ContentService {
         log.info("Updating video key for movie: {}", movieId);
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-        
+
         movie.setVideoKey(videoKey);
         movie.setVideoStatus(VideoStatus.UPLOADED);
         movieRepository.save(movie);
+    }
+
+    public void updateHlsUrl(UUID movieId, String hlsUrl) {
+        log.info("Updating HLS URL for movie: {}", movieId);
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+
+        movie.setHlsUrl(hlsUrl);
+        movie.setVideoStatus(VideoStatus.READY);
+        movieRepository.save(movie);
+
+        log.info("Movie {} is now ready for streaming", movieId);
     }
 
     private MovieResponse mapToResponse(Movie movie) {
