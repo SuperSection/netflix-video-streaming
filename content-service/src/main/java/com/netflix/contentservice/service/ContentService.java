@@ -98,6 +98,16 @@ public class ContentService {
         movieRepository.deleteById(id);
     }
 
+    public void updateVideoKey(UUID movieId, String videoKey) {
+        log.info("Updating video key for movie: {}", movieId);
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+        
+        movie.setVideoKey(videoKey);
+        movie.setVideoStatus(VideoStatus.UPLOADED);
+        movieRepository.save(movie);
+    }
+
     private MovieResponse mapToResponse(Movie movie) {
         return MovieResponse.builder()
                 .id(movie.getId())
